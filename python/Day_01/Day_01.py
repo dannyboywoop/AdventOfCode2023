@@ -1,7 +1,7 @@
 from aoc_tools import Advent_Timer
 from re import compile as compile_regex
 
-DIGIT_REGEX = compile_regex(r"(?:zero|one|two|three|four|five|six|seven|eight|nine|\d)")
+DIGIT_REGEX = compile_regex(r"(?=(zero|one|two|three|four|five|six|seven|eight|nine|\d))")
 DIGIT_MAP = {
     "zero": 0,
     "one": 1,
