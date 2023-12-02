@@ -19,7 +19,7 @@ if __name__ == "__main__":
     timer.checkpoint_hit()
     
     star_02 = None
-    print(f"Star_02: {star_01}")
+    print(f"Star_02: {star_02}")
     timer.checkpoint_hit()
 
     timer.end_hit()
