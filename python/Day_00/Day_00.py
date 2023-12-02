@@ -14,8 +14,12 @@ if __name__ == "__main__":
     print("Input parsed!")
     timer.checkpoint_hit()
 
+    star_01 = None
+    print(f"Star_01: {star_01}")
     timer.checkpoint_hit()
-
+    
+    star_02 = None
+    print(f"Star_02: {star_01}")
     timer.checkpoint_hit()
 
     timer.end_hit()
