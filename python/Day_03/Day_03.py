@@ -61,7 +61,7 @@ def get_part_numbers_and_symbol_neighbours(numbers, symbols):
 def star_01(part_numbers):
     return sum(part_numbers)
 
-def star_02(numbers, symbols, symbol_neighbours):
+def star_02(symbols, symbol_neighbours):
     total = 0
     for position, symbol in symbols.items():
         if symbol == "*" and len(symbol_neighbours[position]) == 2:
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     print(f"Star_01: {star_01(part_numbers)}")
     timer.checkpoint_hit()
     
-    print(f"Star_02: {star_02(numbers, symbols, symbol_neighbours)}")
+    print(f"Star_02: {star_02(symbols, symbol_neighbours)}")
     timer.checkpoint_hit()
 
     timer.end_hit()
