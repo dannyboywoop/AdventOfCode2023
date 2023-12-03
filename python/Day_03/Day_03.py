@@ -1,5 +1,7 @@
 from re import compile as compile_regex
 from typing import NamedTuple
+from functools import cache
+from math import prod
 from aoc_tools import Advent_Timer
 
 NUMBER_REGEX = compile_regex(r"\d+")
@@ -13,9 +15,6 @@ class Position(NamedTuple):
         assert isinstance(other, Position)
         return Position(self.row + other.row, self.col + other.col)
     
-    def __sub__(self, other):
-        assert isinstance(other, Position)
-        return Position(self.row - other.row, self.col - other.col)
 
 def read_data(input_file="input.txt"):
     numbers: dict[Position, str] = {}
@@ -32,7 +31,7 @@ def get_all_adjacent(start_pos:Position, length:int):
     adjacent: set[Position] = set()
 
     # end points
-    adjacent.add(start_pos-Position(col=1))
+    adjacent.add(start_pos+Position(col=-1))
     adjacent.add(start_pos+Position(col=length))
 
     # above and below
@@ -42,16 +41,33 @@ def get_all_adjacent(start_pos:Position, length:int):
     
     return adjacent
 
-def is_part_number(number: str, start_pos: Position, symbols:dict[Position, str]):
-    adjacent_symbols = get_all_adjacent(start_pos, len(number)).intersection(symbols)
-    return bool(adjacent_symbols)
+def get_adjacent_symbol_positions(number:str, start_pos: Position, symbols:dict[Position, str]):
+    return get_all_adjacent(start_pos, len(number)).intersection(symbols)
 
-def star_01(numbers, symbols):
-    part_number_total = 0
+def get_part_numbers_and_symbol_neighbours(numbers, symbols):
+    part_numbers: list[int] = []
+    symbol_neighbours: dict[Position, list[int]] = {position: [] for position in symbols}
+
     for pos, number in numbers.items():
-        if is_part_number(number, pos, symbols):
-            part_number_total += int(number)
-    return part_number_total
+        adjacent_symbol_positions = get_adjacent_symbol_positions(number, pos, symbols)
+        number_int = int(number)
+        if adjacent_symbol_positions:
+            part_numbers.append(number_int)
+        for adjacent_symbol_position in adjacent_symbol_positions:
+            symbol_neighbours[adjacent_symbol_position].append(number_int)
+    
+    return part_numbers, symbol_neighbours
+
+def star_01(part_numbers):
+    return sum(part_numbers)
+
+def star_02(numbers, symbols, symbol_neighbours):
+    total = 0
+    for position, symbol in symbols.items():
+        if symbol == "*" and len(symbol_neighbours[position]) == 2:
+            total += prod(symbol_neighbours[position])
+    return total
+        
 
 if __name__ == "__main__":
     timer = Advent_Timer()
@@ -60,11 +76,14 @@ if __name__ == "__main__":
     print("Input parsed!")
     timer.checkpoint_hit()
 
-    print(f"Star_01: {star_01(numbers, symbols)}")
+    part_numbers, symbol_neighbours = get_part_numbers_and_symbol_neighbours(numbers, symbols)
+    print(f"Finished preprocessing data!")
+    timer.checkpoint_hit()
+
+    print(f"Star_01: {star_01(part_numbers)}")
     timer.checkpoint_hit()
     
-    star_02 = None
-    print(f"Star_02: {star_02}")
+    print(f"Star_02: {star_02(numbers, symbols, symbol_neighbours)}")
     timer.checkpoint_hit()
 
     timer.end_hit()
