@@ -37,8 +37,9 @@ def read_data(input_file="input.txt"):
 def star_02(cards: list[Card]) -> int:
     card_counts = [1 for card in cards]
     for i, card in enumerate(cards):
-        for j in range(i+1, min(i + 1 + card.number_of_matching_nums, len(cards))):
-            card_counts[j] += card_counts[i]
+        for j in range(card.number_of_matching_nums):
+            # Note i+j+1 < len(cards) always, according to problem statement
+            card_counts[i+j+1] += card_counts[i]
     return sum(card_counts)
 
 
